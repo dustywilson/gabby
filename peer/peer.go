@@ -53,7 +53,7 @@ func (p *Peer) Key() *encryption.Key {
 	return p.key
 }
 
-// FetchKey retrieves the peer's public key.  This doesn't return the key to the caller, but updates the key in the Peer struct.
+// FetchKey retrieves the peer's public key.  This returns the key to the caller; more importantly it updates the key in the Peer struct.
 func (p *Peer) FetchKey() (*encryption.Key, error) {
 	txts, err := dns.LookupTXT(strings.Join([]string{p.id, "_keys._gabby", p.domain.String()}, ".")) // "$id._keys._gabby.$domain" TXT record
 	if err != nil {

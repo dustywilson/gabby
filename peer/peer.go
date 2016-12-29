@@ -54,10 +54,10 @@ func (p *Peer) Key() *encryption.Key {
 }
 
 // FetchKey retrieves the peer's public key.  This doesn't return the key to the caller, but updates the key in the Peer struct.
-func (p *Peer) FetchKey() error {
+func (p *Peer) FetchKey() (*encryption.Key, error) {
 	txts, err := dns.LookupTXT(strings.Join([]string{p.id, "_keys._gabby", p.domain.String()}, ".")) // "$id._keys._gabby.$domain" TXT record
 	if err != nil {
-		return err
+		return nil, err
 	}
 	for _, txt := range txts { // note: it's best if there's only one key listed; remembering old keys for key rolling is a problem for the key's owner, not the client
 		keyB64 := txt.Value
@@ -66,7 +66,7 @@ func (p *Peer) FetchKey() error {
 			continue
 		}
 		p.key = encryption.NewPublicKey(keyBytes, txt.TTL)
-		return nil // we only want a single key
+		return p.key, nil // we only want a single key
 	}
-	return errors.New("no public key found for this peer")
+	return nil, errors.New("no public key found for this peer")
 }

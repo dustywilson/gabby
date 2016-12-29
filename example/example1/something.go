@@ -20,7 +20,6 @@ func main() {
 	}
 	fmt.Println(p.String())
 	fmt.Println(p.FetchKey())
-	fmt.Println(p.Key())
 	fmt.Println(p.Key().Expired())
 	fmt.Println(p.Key().ShouldRefresh())
 }
